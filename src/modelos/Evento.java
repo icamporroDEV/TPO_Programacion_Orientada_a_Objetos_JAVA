@@ -27,7 +27,7 @@ public class Evento implements Comparable<Evento> {
         return this.nombre.compareToIgnoreCase(otroEvento.getNombre());
     }
 
-  //region Métodos Getters y Setters
+    //region Métodos Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -95,5 +95,26 @@ public class Evento implements Comparable<Evento> {
                 "Número de asistentes: " + asistentes.size() + "\n" +
                 "Número de recursos: " + recursos.size() + "\n";
         return detalles;
+    }
+
+    public String FormatoCSV() {
+        StringBuilder asistentesCSV = new StringBuilder();
+        for (Asistente asistente : asistentes) {
+            if (asistentesCSV.length() > 0) {
+                asistentesCSV.append("|"); // Separador entre asistentes
+            }
+            asistentesCSV.append(asistente.getNombre());
+        }
+
+        StringBuilder recursosCSV = new StringBuilder();
+        for (Recurso recurso : recursos) {
+            if (recursosCSV.length() > 0) {
+                recursosCSV.append("|"); // Separador entre recursos
+            }
+            recursosCSV.append(recurso.getTipo());
+        }
+
+        return String.format("%s;%s;%s;%s;%s;%s",
+                nombre, fecha, ubicacion, descripcion, asistentesCSV.toString(), recursosCSV.toString());
     }
 }

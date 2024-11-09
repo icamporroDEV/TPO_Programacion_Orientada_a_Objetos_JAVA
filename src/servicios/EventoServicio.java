@@ -1,6 +1,10 @@
 package servicios;
 
+import modelos.Asistente;
 import modelos.Evento;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -68,4 +72,35 @@ public class EventoServicio {
             }
         }
     }
+
+    public void mostrarNombresEventos() {
+        System.out.println("===== Lista de Eventos =====");
+        for (Evento evento : eventos) {
+            System.out.println("- " + evento.getNombre());
+        }
+    }
+
+    public void mostrarAsistentesEvento(String nombreEvento) {
+        Evento evento = buscarEventoPorNombre(nombreEvento);
+        if (evento != null && !evento.getAsistentes().isEmpty()) {
+            System.out.println("===== Asistentes del Evento: " + nombreEvento + " =====");
+            for (Asistente asistente : evento.getAsistentes()) {
+                System.out.println(asistente.obtenerInformacion());
+            }
+        } else if (evento != null) {
+            System.out.println("No hay asistentes registrados en el evento.");
+        } else {
+            System.out.println("Evento no encontrado.");
+        }
+    }
+
+    public void guardarEventos(String nombreArchivo) throws IOException {
+        try (FileWriter writer = new FileWriter(nombreArchivo)) {
+            writer.write("Nombre;Fecha;Ubicacion;Descripcion;Asistentes;Recursos\n"); // Encabezado CSV
+            for (Evento evento : eventos) {
+                writer.write(evento.FormatoCSV() + "\n");
+            }
+        }
+    }
+
 }

@@ -3,12 +3,15 @@ import modelos.Evento;
 import modelos.Recurso;
 import servicios.EventoServicio;
 import servicios.NotificacionServicio;
+
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         EventoServicio eventoServicio = new EventoServicio();
+        NotificacionServicio notificacionServicio = new NotificacionServicio();
 
         boolean salir = false;
 
@@ -17,11 +20,12 @@ public class Main {
             System.out.println("1. Gestión de Eventos");
             System.out.println("2. Gestión de Asistentes");
             System.out.println("3. Gestión de Recursos");
-            System.out.println("4. Salir");
+            System.out.println("4. Guardar información en archivo CSV");
+            System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
 
             int opcionPrincipal = scanner.nextInt();
-            scanner.nextLine();  // Consume nueva línea
+            scanner.nextLine();  // Consumir nueva línea
 
             switch (opcionPrincipal) {
                 case 1:
@@ -37,8 +41,17 @@ public class Main {
                     break;
 
                 case 4:
+                    try {
+                        eventoServicio.guardarEventos("eventos.csv");
+                        System.out.println("Información guardada exitosamente en eventos.csv");
+                    } catch (IOException e) {
+                        System.out.println("Error al guardar en el archivo CSV: " + e.getMessage());
+                    }
+                    break;
+
+                case 5:
                     salir = true;
-                    System.out.println("Saliendo del sistema de gestión de eventos, gracias por elegirnos!");
+                    System.out.println("Saliendo del sistema de gestión de eventos...");
                     break;
 
                 default:
@@ -48,6 +61,7 @@ public class Main {
         }
         scanner.close();
     }
+
 
     // Submenú para la gestión de eventos
     private static void menuGestionEventos(Scanner scanner, EventoServicio eventoServicio) {
@@ -114,10 +128,12 @@ public class Main {
 
         while (!volver) {
             System.out.println("===== Gestión de Asistentes =====");
-            System.out.println("1. Agregar Invitado a Evento");
-            System.out.println("2. Eliminar Invitado de Evento");
-            System.out.println("3. Enviar Notificación a Invitados");
-            System.out.println("4. Volver al Menú Principal");
+            System.out.println("1. Agregar Asistente a Evento");
+            System.out.println("2. Eliminar Asistente de Evento");
+            System.out.println("3. Enviar Notificación a Asistentes");
+            System.out.println("4. Confirmar Asistencia");
+            System.out.println("5. Ver Asistentes de Evento");
+            System.out.println("6. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
 
             int opcion = scanner.nextInt();
@@ -125,6 +141,7 @@ public class Main {
 
             switch (opcion) {
                 case 1:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento al que desea agregar un Invitado: ");
                     String nombreEventoAsistente = scanner.nextLine();
                     Evento eventoParaAsistente = eventoServicio.buscarEventoPorNombre(nombreEventoAsistente);
@@ -144,6 +161,7 @@ public class Main {
                     break;
 
                 case 2:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento del que desea eliminar un Invitado: ");
                     String nombreEventoEliminarAsistente = scanner.nextLine();
                     Evento eventoParaEliminarAsistente = eventoServicio.buscarEventoPorNombre(nombreEventoEliminarAsistente);
@@ -172,6 +190,7 @@ public class Main {
                     break;
 
                 case 3:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento para enviar notificación: ");
                     String nombreEventoNotificacion = scanner.nextLine();
                     Evento eventoParaNotificacion = eventoServicio.buscarEventoPorNombre(nombreEventoNotificacion);
@@ -187,6 +206,49 @@ public class Main {
                     break;
 
                 case 4:
+                    System.out.println("Seleccione el evento para confirmar asistencia de un asistente:");
+                    eventoServicio.mostrarNombresEventos(); // Muestra solo los nombres de los eventos
+                    System.out.print("Ingrese el nombre del evento: ");
+                    String nombreEvento = scanner.nextLine();
+
+                    // Muestra asistentes del evento seleccionado
+                    Evento evento = eventoServicio.buscarEventoPorNombre(nombreEvento);
+                    if (evento != null && !evento.getAsistentes().isEmpty()) {
+                        System.out.println("Asistentes del evento:");
+                        for (int i = 0; i < evento.getAsistentes().size(); i++) {
+                            System.out.println((i + 1) + ". " + evento.getAsistentes().get(i).obtenerInformacion());
+                        }
+
+                        // Seleccionar asistente para confirmar asistencia
+                        System.out.print("Seleccione el número del asistente para confirmar su asistencia: ");
+                        int numeroAsistente = scanner.nextInt();
+                        scanner.nextLine(); // Consumir nueva línea
+
+                        if (numeroAsistente > 0 && numeroAsistente <= evento.getAsistentes().size()) {
+                            Asistente asistenteSeleccionado = evento.getAsistentes().get(numeroAsistente - 1);
+                            asistenteSeleccionado.confirmarAsistencia();
+                            System.out.println("Asistencia confirmada para: " + asistenteSeleccionado.getNombre());
+                        } else {
+                            System.out.println("Número de asistente no válido.");
+                        }
+                    } else if (evento != null) {
+                        System.out.println("No hay asistentes registrados en este evento.");
+                    } else {
+                        System.out.println("Evento no encontrado.");
+                    }
+                    break;
+
+                case 5:
+                    // Nueva opción para ver asistentes de un evento específico
+                    System.out.println("Seleccione el evento para ver los asistentes:");
+                    eventoServicio.mostrarNombresEventos();
+                    System.out.print("Ingrese el nombre del evento: ");
+                    nombreEvento = scanner.nextLine();
+
+                    eventoServicio.mostrarAsistentesEvento(nombreEvento);
+                    break;
+
+                case 6:
                     volver = true;
                     break;
 
@@ -214,6 +276,7 @@ public class Main {
 
             switch (opcion) {
                 case 1:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento al que desea agregar un recurso: ");
                     String nombreEventoRecurso = scanner.nextLine();
                     Evento eventoParaRecurso = eventoServicio.buscarEventoPorNombre(nombreEventoRecurso);
@@ -233,6 +296,7 @@ public class Main {
                     break;
 
                 case 2:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento para listar los recursos disponibles: ");
                     String nombreEventoListarRecursos = scanner.nextLine();
                     Evento eventoParaListarRecursos = eventoServicio.buscarEventoPorNombre(nombreEventoListarRecursos);
@@ -249,6 +313,7 @@ public class Main {
                     break;
 
                 case 3:
+                    eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento del que desea eliminar un recurso: ");
                     String nombreEventoEliminarRecurso = scanner.nextLine();
                     Evento eventoParaEliminarRecurso = eventoServicio.buscarEventoPorNombre(nombreEventoEliminarRecurso);
