@@ -1,6 +1,7 @@
 package modelos;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Evento implements Comparable<Evento> {
@@ -21,7 +22,7 @@ public class Evento implements Comparable<Evento> {
         this.descripcion = descripcion;
         this.asistentes = new ArrayList<>();
         this.recursos = new ArrayList<>();
-        this.feedback =new ArrayList<>();
+        this.feedback = new ArrayList<>();
     }
 
     @Override
@@ -78,6 +79,7 @@ public class Evento implements Comparable<Evento> {
     // Métodos la gestión de asistentes
     public void agregarAsistente(Asistente asistente) {
         this.asistentes.add(asistente);
+        this.feedback.add(-1);
     }
 
     public void eliminarAsistente(Asistente asistente) {

@@ -9,6 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
+
 public class EventoServicio {
     private List<Evento> eventos;
 
@@ -47,7 +54,7 @@ public class EventoServicio {
 
             switch (opcion){
                 case 1:
-                    System.out.print("Ingrese la nueva fecha del evento: ");
+                    System.out.print("Ingrese la nueva fecha del evento: (dd/mm/yyyy");
                     evento.setFecha(scanner.nextLine());
                     break;
                 case 2:
@@ -119,5 +126,7 @@ public class EventoServicio {
             }
         }
     }
+
+
 
 }

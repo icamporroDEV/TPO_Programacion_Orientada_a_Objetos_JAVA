@@ -73,7 +73,8 @@ public class Main {
             System.out.println("2. Modificar Evento");
             System.out.println("3. Listar Eventos");
             System.out.println("4. Eliminar Evento");
-            System.out.println("5. Volver al Menú Principal");
+            System.out.println("5. Ver calendario");
+            System.out.println("6. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
 
             int opcion = scanner.nextInt();
@@ -83,7 +84,7 @@ public class Main {
                 case 1:
                     System.out.print("Ingrese el nombre del evento: ");
                     String nombre = scanner.nextLine();
-                    System.out.print("Ingrese la fecha del evento: ");
+                    System.out.print("Ingrese la fecha del evento: (yyyy/mm/dd)");
                     String fecha = scanner.nextLine();
                     System.out.print("Ingrese la ubicación del evento: ");
                     String ubicacion = scanner.nextLine();
@@ -112,6 +113,11 @@ public class Main {
                     break;
 
                 case 5:
+                    System.out.println("===== Calendario =====");
+                    eventoServicio.mostrarCalendario();
+                    break;
+
+                case 6:
                     volver = true;
                     break;
 
@@ -259,15 +265,23 @@ public class Main {
                     if (eventoF != null && !eventoF.getAsistentes().isEmpty()) {
                         System.out.println("Asistentes del evento:");
                         for (int i = 0; i < eventoF.getAsistentes().size(); i++) {
-                            System.out.println((i + 1) + ". " + eventoF.getAsistentes().get(i).getNombre());
+                            if(eventoF.getAsistentes().get(i).isEsConfirmado()){
+                                System.out.println((i + 1) + ". " + eventoF.getAsistentes().get(i).getNombre());
+                            }
                         }
                     }
                     System.out.print("Seleccione el número del asistente para tomar su Feedback: ");
                     int asistenteF = scanner.nextInt();
-                    scanner.nextLine(); // Consumir nueva línea
+                    while (asistenteF < 0 || asistenteF > eventoF.getAsistentes().size() || !eventoF.getAsistentes().get(asistenteF-1).isEsConfirmado()){
+                        System.out.print("Error, Ingrese nuevamente el numero de asistente: ");
+                        asistenteF = scanner.nextInt();
+                    }
                     System.out.print("Ingrese la puntuación del evento: ");
                     int puntuacionF = scanner.nextInt();
-                    scanner.nextLine(); // Consumir nueva línea
+                    while (puntuacionF < 0 || puntuacionF > 10){
+                        System.out.print("Error, Ingrese nuevamente la puntuación: ");
+                        puntuacionF = scanner.nextInt();
+                    }
                     eventoF.agregarFeedback(puntuacionF,asistenteF-1);
                     break;
 
@@ -281,11 +295,16 @@ public class Main {
                     for (int i = 0; i < eventoFV.getAsistentes().size(); i++) {
                         System.out.println((eventoFV.getAsistentes().get(i).getNombre() + "               " + eventoFV.getFeedback().get(i)));
                     }
-                    int suma = 0;
+                    int suma = 0; //suma del total de los feedbacks distintos a -1
+                    int contador = 0; //cantidad de feedbacks que estan cargados
                     for(int i = 0; i < eventoFV.getFeedback().size(); i++){
-                        suma += eventoFV.getFeedback().get(i);
+                        if (eventoFV.getFeedback().get(i) != -1){
+                            suma += eventoFV.getFeedback().get(i);
+                            contador++;
+                        }
                     }
-                    System.out.println("Promedio Feedback = " + (suma/eventoFV.getFeedback().size()));
+
+                    System.out.println("Promedio Feedback = " + (suma/contador));
                     break;
 
                 case 8:
