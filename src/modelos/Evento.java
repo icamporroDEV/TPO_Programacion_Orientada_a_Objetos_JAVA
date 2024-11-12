@@ -11,6 +11,7 @@ public class Evento implements Comparable<Evento> {
     private String descripcion;
     private List<Asistente> asistentes;
     private List<Recurso> recursos;
+    private List<Integer> feedback;
 
 
     public Evento(String nombre, String fecha, String ubicacion, String descripcion) {
@@ -20,6 +21,7 @@ public class Evento implements Comparable<Evento> {
         this.descripcion = descripcion;
         this.asistentes = new ArrayList<>();
         this.recursos = new ArrayList<>();
+        this.feedback =new ArrayList<>();
     }
 
     @Override
@@ -67,6 +69,10 @@ public class Evento implements Comparable<Evento> {
     public List<Recurso> getRecursos() {
         return recursos;
     }
+
+    public List<Integer> getFeedback() {
+        return feedback;
+    }
     //endregion
 
     // Métodos la gestión de asistentes
@@ -85,6 +91,10 @@ public class Evento implements Comparable<Evento> {
 
     public void eliminarRecurso(Recurso recurso) {
         this.recursos.remove(recurso);
+    }
+
+    public void agregarFeedback(int puntuacion, int asistente){
+        this.feedback.add(asistente, puntuacion);
     }
 
     public String obtenerDetalles() {

@@ -26,7 +26,7 @@ public class Main {
 
             int opcionPrincipal = scanner.nextInt();
             scanner.nextLine();  // Consumir nueva línea
-
+            System.out.println(" ");
             switch (opcionPrincipal) {
                 case 1:
                     menuGestionEventos(scanner, eventoServicio);
@@ -57,9 +57,9 @@ public class Main {
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-            System.out.println();
         }
         scanner.close();
+        System.out.println(" ");
     }
 
 
@@ -78,7 +78,7 @@ public class Main {
 
             int opcion = scanner.nextInt();
             scanner.nextLine();  // Consume nueva línea
-
+            System.out.println(" ");
             switch (opcion) {
                 case 1:
                     System.out.print("Ingrese el nombre del evento: ");
@@ -118,8 +118,8 @@ public class Main {
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-            System.out.println();
         }
+        System.out.println(" ");
     }
 
     // Submenús para la gestión de Invitados
@@ -133,12 +133,14 @@ public class Main {
             System.out.println("3. Enviar Notificación a Asistentes");
             System.out.println("4. Confirmar Asistencia");
             System.out.println("5. Ver Asistentes de Evento");
-            System.out.println("6. Volver al Menú Principal");
+            System.out.println("6. Agregar Feedback Evento");
+            System.out.println("7. Ver Feedback de Evento");
+            System.out.println("8. Volver al Menú Principal");
             System.out.print("Seleccione una opción: ");
 
             int opcion = scanner.nextInt();
             scanner.nextLine();  // Consume nueva línea
-
+            System.out.println(" ");
             switch (opcion) {
                 case 1:
                     eventoServicio.mostrarNombresEventos();
@@ -249,13 +251,51 @@ public class Main {
                     break;
 
                 case 6:
+                    System.out.println("Seleccione el evento para enviar Feedback:");
+                    eventoServicio.mostrarNombresEventos(); // Muestra solo los nombres de los eventos
+                    System.out.print("Ingrese el nombre del evento: ");
+                    String nombreEventoF = scanner.nextLine();
+                    Evento eventoF = eventoServicio.buscarEventoPorNombre(nombreEventoF);
+                    if (eventoF != null && !eventoF.getAsistentes().isEmpty()) {
+                        System.out.println("Asistentes del evento:");
+                        for (int i = 0; i < eventoF.getAsistentes().size(); i++) {
+                            System.out.println((i + 1) + ". " + eventoF.getAsistentes().get(i).getNombre());
+                        }
+                    }
+                    System.out.print("Seleccione el número del asistente para tomar su Feedback: ");
+                    int asistenteF = scanner.nextInt();
+                    scanner.nextLine(); // Consumir nueva línea
+                    System.out.print("Ingrese la puntuación del evento: ");
+                    int puntuacionF = scanner.nextInt();
+                    scanner.nextLine(); // Consumir nueva línea
+                    eventoF.agregarFeedback(puntuacionF,asistenteF-1);
+                    break;
+
+                case 7:
+                    System.out.println("Seleccione el evento para ver su Feedback:");
+                    eventoServicio.mostrarNombresEventos(); // Muestra solo los nombres de los eventos
+                    System.out.print("Ingrese el nombre del evento: ");
+                    String nombreEventoFV = scanner.nextLine();
+                    Evento eventoFV = eventoServicio.buscarEventoPorNombre(nombreEventoFV);
+                    System.out.println("Nombre         Feedback");
+                    for (int i = 0; i < eventoFV.getAsistentes().size(); i++) {
+                        System.out.println((eventoFV.getAsistentes().get(i).getNombre() + "               " + eventoFV.getFeedback().get(i)));
+                    }
+                    int suma = 0;
+                    for(int i = 0; i < eventoFV.getFeedback().size(); i++){
+                        suma += eventoFV.getFeedback().get(i);
+                    }
+                    System.out.println("Promedio Feedback = " + (suma/eventoFV.getFeedback().size()));
+                    break;
+
+                case 8:
                     volver = true;
                     break;
 
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-            System.out.println();
+            System.out.println(" ");
         }
     }
 
@@ -273,7 +313,7 @@ public class Main {
 
             int opcion = scanner.nextInt();
             scanner.nextLine();
-
+            System.out.println(" ");
             switch (opcion) {
                 case 1:
                     eventoServicio.mostrarNombresEventos();
@@ -302,6 +342,7 @@ public class Main {
                     Evento eventoParaListarRecursos = eventoServicio.buscarEventoPorNombre(nombreEventoListarRecursos);
 
                     if (eventoParaListarRecursos != null) {
+                        System.out.println(" ");
                         System.out.println("===== Recursos del Evento '" + eventoParaListarRecursos.getNombre() + "' =====");
                         for (Recurso recurso : eventoParaListarRecursos.getRecursos()) {
                             System.out.println(recurso.obtenerDetalles());
@@ -348,7 +389,7 @@ public class Main {
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-            System.out.println();
+            System.out.println(" ");
         }
     }
 }

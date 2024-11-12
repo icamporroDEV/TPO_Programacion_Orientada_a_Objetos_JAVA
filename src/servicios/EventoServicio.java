@@ -43,6 +43,7 @@ public class EventoServicio {
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine();
+            System.out.println(" ");
 
             switch (opcion){
                 case 1:
