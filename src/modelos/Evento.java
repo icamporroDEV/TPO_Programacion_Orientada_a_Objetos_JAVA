@@ -3,6 +3,7 @@ package modelos;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 public class Evento implements Comparable<Evento> {
 
@@ -96,7 +97,12 @@ public class Evento implements Comparable<Evento> {
     }
 
     public void agregarFeedback(int puntuacion, int asistente){
-        this.feedback.add(asistente, puntuacion);
+        while (puntuacion < 0 || puntuacion > 10){
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Error, Ingrese nuevamente la puntuación: ");
+            puntuacion = scanner.nextInt();
+        }
+        this.feedback.set(asistente, puntuacion);
     }
 
     public String obtenerDetalles() {

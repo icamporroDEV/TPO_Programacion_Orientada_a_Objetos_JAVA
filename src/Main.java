@@ -278,10 +278,6 @@ public class Main {
                     }
                     System.out.print("Ingrese la puntuación del evento: ");
                     int puntuacionF = scanner.nextInt();
-                    while (puntuacionF < 0 || puntuacionF > 10){
-                        System.out.print("Error, Ingrese nuevamente la puntuación: ");
-                        puntuacionF = scanner.nextInt();
-                    }
                     eventoF.agregarFeedback(puntuacionF,asistenteF-1);
                     break;
 

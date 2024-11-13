@@ -17,7 +17,7 @@ public class Calendario extends JFrame {
     public void verCalendario(){
         setTitle("Calendario de Eventos");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         fechaActual = LocalDate.now();
@@ -46,6 +46,10 @@ public class Calendario extends JFrame {
         tablaCalendario = new JTable(modeloCalendario);
         tablaCalendario.setRowHeight(50);
         tablaCalendario.setCellSelectionEnabled(false); // Deshabilitar selección
+        tablaCalendario.setColumnSelectionAllowed(false); // Desactiva la selección por columna
+        tablaCalendario.setRowSelectionAllowed(false);    // Desactiva la selección por fila
+        tablaCalendario.setFocusable(true);              // Desactiva el foco en la tabla
+        tablaCalendario.setSelectionModel(new DefaultListSelectionModel()); // Desactiva la selecció
         add(new JScrollPane(tablaCalendario), BorderLayout.CENTER);
         actualizarCalendario();
     }
@@ -103,7 +107,7 @@ public class Calendario extends JFrame {
         return anio + "-" + mes + "-" + dia;
     }
 
-    public void addEvent(int anio, int mes, int dia, String nombreEvento) {
+    public void agregarEventoCalendario(int anio, int mes, int dia, String nombreEvento) {
         String fecha = auxiliarEvento(anio, mes, dia);
         eventos.put(fecha, nombreEvento);
         if (anio == fechaActual.getYear() && mes == fechaActual.getMonthValue()) {

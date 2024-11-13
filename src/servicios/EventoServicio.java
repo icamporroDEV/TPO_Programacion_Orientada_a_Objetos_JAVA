@@ -129,20 +129,16 @@ public class EventoServicio {
     }
 
     public void mostrarCalendario(){
-        SwingUtilities.invokeLater(() -> {
-                calendario.setVisible(true);
-                calendario.verCalendario();
-                for (Evento evento : eventos){
-                    String fecha = evento.getFecha();
-                    String[] aux = fecha.split("/");
-                    int dia = Integer.parseInt(aux[2]);
-                    int mes = Integer.parseInt(aux[1]);
-                    int anio = Integer.parseInt(aux[0]);
-                    calendario.addEvent(anio, mes, dia, evento.getNombre());
-                }
-        });
+
+        calendario.setVisible(true);
+        calendario.verCalendario();
+        for (Evento evento : eventos){
+            String fecha = evento.getFecha();
+            String[] aux = fecha.split("/");
+            int dia = Integer.parseInt(aux[2]);
+            int mes = Integer.parseInt(aux[1]);
+            int anio = Integer.parseInt(aux[0]);
+            calendario.agregarEventoCalendario(anio, mes, dia, evento.getNombre());
+        }
     }
-
-
-
 }
