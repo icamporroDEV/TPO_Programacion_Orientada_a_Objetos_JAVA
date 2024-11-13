@@ -21,7 +21,7 @@ public class Evento implements Comparable<Evento> {
         this.descripcion = descripcion;
         this.asistentes = new ArrayList<>();
         this.recursos = new ArrayList<>();
-        this.feedback =new ArrayList<>();
+        this.feedback = new ArrayList<>();
     }
 
     @Override
@@ -78,6 +78,7 @@ public class Evento implements Comparable<Evento> {
     // Métodos la gestión de asistentes
     public void agregarAsistente(Asistente asistente) {
         this.asistentes.add(asistente);
+        this.feedback.add(-1); // Inicializa la puntuación del asistente para que coincidan los indices
     }
 
     public void eliminarAsistente(Asistente asistente) {
@@ -94,7 +95,12 @@ public class Evento implements Comparable<Evento> {
     }
 
     public void agregarFeedback(int puntuacion, int asistente){
-        this.feedback.add(asistente, puntuacion);
+        if (asistente >= 0 && asistente < feedback.size()) {
+            this.feedback.set(asistente, puntuacion); // Actualiza la puntuación en el índice del asistente
+            System.out.println("Feedback registrado exitosamente! gracias por participar. ");
+        } else {
+            System.out.println("Índice de asistente fuera de rango.");
+        }
     }
 
     public String obtenerDetalles() {

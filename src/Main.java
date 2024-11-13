@@ -268,7 +268,7 @@ public class Main {
                     System.out.print("Ingrese la puntuación del evento: ");
                     int puntuacionF = scanner.nextInt();
                     scanner.nextLine(); // Consumir nueva línea
-                    eventoF.agregarFeedback(puntuacionF,asistenteF-1);
+                    eventoF.agregarFeedback(puntuacionF,(asistenteF-1));
                     break;
 
                 case 7:
@@ -277,16 +277,29 @@ public class Main {
                     System.out.print("Ingrese el nombre del evento: ");
                     String nombreEventoFV = scanner.nextLine();
                     Evento eventoFV = eventoServicio.buscarEventoPorNombre(nombreEventoFV);
+
                     System.out.println("Nombre         Feedback");
-                    for (int i = 0; i < eventoFV.getAsistentes().size(); i++) {
-                        System.out.println((eventoFV.getAsistentes().get(i).getNombre() + "               " + eventoFV.getFeedback().get(i)));
-                    }
                     int suma = 0;
-                    for(int i = 0; i < eventoFV.getFeedback().size(); i++){
-                        suma += eventoFV.getFeedback().get(i);
+                    int count = 0;
+
+                    // Mostrar solo los asistentes que han dado feedback y calcular el promedio solo sobre ellos
+                    for (int i = 0; i < eventoFV.getAsistentes().size(); i++) {
+                        int feedback = eventoFV.getFeedback().get(i);
+                        if (feedback != -1) {
+                            System.out.println(eventoFV.getAsistentes().get(i).getNombre() + "               " + feedback);
+                            suma += feedback;
+                            count++;
+                        }
                     }
-                    System.out.println("Promedio Feedback = " + (suma/eventoFV.getFeedback().size()));
+
+                    // Calcular y mostrar el promedio si hay asistentes con feedback
+                    if (count > 0) {
+                        System.out.println("Promedio Feedback = " + (suma / count));
+                    } else {
+                        System.out.println("No hay feedback registrado para este evento.");
+                    }
                     break;
+
 
                 case 8:
                     volver = true;
