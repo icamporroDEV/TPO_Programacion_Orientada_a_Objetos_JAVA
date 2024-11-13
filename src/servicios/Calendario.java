@@ -17,7 +17,7 @@ public class Calendario extends JFrame {
     public void verCalendario(){
         setTitle("Calendario de Eventos");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         fechaActual = LocalDate.now();
@@ -49,7 +49,7 @@ public class Calendario extends JFrame {
         tablaCalendario.setColumnSelectionAllowed(false); // Desactiva la selección por columna
         tablaCalendario.setRowSelectionAllowed(false);    // Desactiva la selección por fila
         tablaCalendario.setFocusable(true);              // Desactiva el foco en la tabla
-        tablaCalendario.setSelectionModel(new DefaultListSelectionModel()); // Desactiva la selecció
+        tablaCalendario.setSelectionModel(new DefaultListSelectionModel()); // Desactiva la selección
         add(new JScrollPane(tablaCalendario), BorderLayout.CENTER);
         actualizarCalendario();
     }

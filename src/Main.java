@@ -53,7 +53,7 @@ public class Main {
                 case 5:
                     salir = true;
                     System.out.println("Saliendo del sistema de gestión de eventos...");
-                    break;
+                    System.exit(0);
 
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");

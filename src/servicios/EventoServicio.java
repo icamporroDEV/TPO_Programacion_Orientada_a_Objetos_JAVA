@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class EventoServicio {
     private List<Evento> eventos;
-    private Calendario calendario = new Calendario();
+
 
     public EventoServicio() {
         this.eventos = new ArrayList<>();
@@ -129,7 +129,7 @@ public class EventoServicio {
     }
 
     public void mostrarCalendario(){
-
+        Calendario calendario = new Calendario();
         calendario.setVisible(true);
         calendario.verCalendario();
         for (Evento evento : eventos){
