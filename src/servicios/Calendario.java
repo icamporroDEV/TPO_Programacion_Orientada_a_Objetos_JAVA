@@ -8,33 +8,33 @@ import java.time.YearMonth;
 import java.util.HashMap;
 
 public class Calendario extends JFrame {
-    private JTable calendarTable;
+    private JTable tablaCalendario;
     private DefaultTableModel modeloCalendario;
     private JLabel mesAnioLabel;
     private HashMap<String, String> eventos;
     private LocalDate fechaActual;
 
-    public Calendario() {
+    public void verCalendario(){
         setTitle("Calendario de Eventos");
         setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         fechaActual = LocalDate.now();
         eventos = new HashMap<>();
 
         // Panel para el mes y el año
-        JPanel topPanel = new JPanel();
+        JPanel panelSuperior = new JPanel();
         mesAnioLabel = new JLabel();
-        JButton prevMonthButton = new JButton("<");
-        JButton nextMonthButton = new JButton(">");
-        prevMonthButton.addActionListener(e -> changeMonth(-1));
-        nextMonthButton.addActionListener(e -> changeMonth(1));
+        JButton botonMesPrevio = new JButton("<");
+        JButton botonMesSiguiente = new JButton(">");
+        botonMesPrevio.addActionListener(e -> cambiarMes(-1));
+        botonMesSiguiente.addActionListener(e -> cambiarMes(1));
 
-        topPanel.add(prevMonthButton);
-        topPanel.add(mesAnioLabel);
-        topPanel.add(nextMonthButton);
-        add(topPanel, BorderLayout.NORTH);
+        panelSuperior.add(botonMesPrevio);
+        panelSuperior.add(mesAnioLabel);
+        panelSuperior.add(botonMesSiguiente);
+        add(panelSuperior, BorderLayout.NORTH);
 
         // Modelo de la tabla del calendario
         modeloCalendario = new DefaultTableModel(new String[]{"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"}, 0) {
@@ -43,75 +43,72 @@ public class Calendario extends JFrame {
                 return false;
             }
         };
-        calendarTable = new JTable(modeloCalendario);
-        calendarTable.setRowHeight(50);
-        calendarTable.setCellSelectionEnabled(false); // Deshabilitar selección
-        add(new JScrollPane(calendarTable), BorderLayout.CENTER);
-
-        updateCalendar();
+        tablaCalendario = new JTable(modeloCalendario);
+        tablaCalendario.setRowHeight(50);
+        tablaCalendario.setCellSelectionEnabled(false); // Deshabilitar selección
+        add(new JScrollPane(tablaCalendario), BorderLayout.CENTER);
+        actualizarCalendario();
     }
 
-    private void changeMonth(int amount) {
+    private void cambiarMes(int amount) {
         fechaActual = fechaActual.plusMonths(amount);
-        updateCalendar();
+        actualizarCalendario();
     }
 
-    private void updateCalendar() {
+    private void actualizarCalendario() {
         modeloCalendario.setRowCount(0);
         mesAnioLabel.setText(fechaActual.getMonth() + " " + fechaActual.getYear());
 
-        YearMonth yearMonth = YearMonth.of(fechaActual.getYear(), fechaActual.getMonthValue());
-        int daysInMonth = yearMonth.lengthOfMonth();
-        int firstDayOfWeek = yearMonth.atDay(1).getDayOfWeek().getValue() % 7;
+        YearMonth anioMes = YearMonth.of(fechaActual.getYear(), fechaActual.getMonthValue());
+        int diasMes = anioMes.lengthOfMonth();
+        int primerDiaSemana = anioMes.atDay(1).getDayOfWeek().getValue() % 7;
 
-        Object[] week = new Object[7];
-        int day = 1;
+        Object[] semana = new Object[7];
+        int dia = 1;
 
-        for (int i = 0; i < firstDayOfWeek; i++) {
-            week[i] = null;
+        for (int i = 0; i < primerDiaSemana; i++) {
+            semana[i] = null;
         }
-        for (int i = firstDayOfWeek; i < 7; i++) {
-            week[i] = day++;
+        for (int i = primerDiaSemana; i < 7; i++) {
+            semana[i] = dia++;
         }
-        modeloCalendario.addRow(week);
+        modeloCalendario.addRow(semana);
 
-        while (day <= daysInMonth) {
-            week = new Object[7];
-            for (int i = 0; i < 7 && day <= daysInMonth; i++) {
-                week[i] = day++;
+        while (dia <= diasMes) {
+            semana = new Object[7];
+            for (int i = 0; i < 7 && dia <= diasMes; i++) {
+                semana[i] = dia++;
             }
-            modeloCalendario.addRow(week);
+            modeloCalendario.addRow(semana);
         }
-
-        highlighteventos();
+        ponerEventoCalendario();
     }
 
-    private void highlighteventos() {
-        for (int row = 0; row < calendarTable.getRowCount(); row++) {
-            for (int col = 0; col < calendarTable.getColumnCount(); col++) {
-                Object dayValue = calendarTable.getValueAt(row, col);
-                if (dayValue != null) {
-                    String day = String.valueOf(dayValue);
-                    String key = generateEventKey(fechaActual.getYear(), fechaActual.getMonthValue(), Integer.parseInt(day));
-                    if (eventos.containsKey(key)) {
-                        calendarTable.setValueAt(day + ": " + eventos.get(key), row, col);
+    private void ponerEventoCalendario() {
+        for (int fila = 0; fila < tablaCalendario.getRowCount(); fila++) {
+            for (int col = 0; col < tablaCalendario.getColumnCount(); col++) {
+                Object valorDia = tablaCalendario.getValueAt(fila, col);
+                if (valorDia != null) {
+                    String dia = String.valueOf(valorDia);
+                    String nombre = auxiliarEvento(fechaActual.getYear(), fechaActual.getMonthValue(), Integer.parseInt(dia));
+                    if (eventos.containsKey(nombre)) {
+                        tablaCalendario.setValueAt(dia + ": " + eventos.get(nombre), fila, col);
                     }
                 }
             }
         }
     }
 
-    private String generateEventKey(int year, int month, int day) {
-        return year + "-" + month + "-" + day;
+    private String auxiliarEvento(int anio, int mes, int dia) {
+        return anio + "-" + mes + "-" + dia;
     }
 
-    public void addEvent(int year, int month, int day, String eventName) {
-        String key = generateEventKey(year, month, day);
-        eventos.put(key, eventName);
-        if (year == fechaActual.getYear() && month == fechaActual.getMonthValue()) {
-            updateCalendar();
+    public void addEvent(int anio, int mes, int dia, String nombreEvento) {
+        String fecha = auxiliarEvento(anio, mes, dia);
+        eventos.put(fecha, nombreEvento);
+        if (anio == fechaActual.getYear() && mes == fechaActual.getMonthValue()) {
+            actualizarCalendario();
         }
     }
-    
 }
 

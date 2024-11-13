@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 public class EventoServicio {
     private List<Evento> eventos;
+    private Calendario calendario = new Calendario();
 
     public EventoServicio() {
         this.eventos = new ArrayList<>();
@@ -54,7 +55,7 @@ public class EventoServicio {
 
             switch (opcion){
                 case 1:
-                    System.out.print("Ingrese la nueva fecha del evento: (dd/mm/yyyy");
+                    System.out.print("Ingrese la nueva fecha del evento (yyyy/mm/dd): ");
                     evento.setFecha(scanner.nextLine());
                     break;
                 case 2:
@@ -125,6 +126,21 @@ public class EventoServicio {
                 writer.write(evento.FormatoCSV() + "\n");
             }
         }
+    }
+
+    public void mostrarCalendario(){
+        SwingUtilities.invokeLater(() -> {
+                calendario.setVisible(true);
+                calendario.verCalendario();
+                for (Evento evento : eventos){
+                    String fecha = evento.getFecha();
+                    String[] aux = fecha.split("/");
+                    int dia = Integer.parseInt(aux[2]);
+                    int mes = Integer.parseInt(aux[1]);
+                    int anio = Integer.parseInt(aux[0]);
+                    calendario.addEvent(anio, mes, dia, evento.getNombre());
+                }
+        });
     }
 
 

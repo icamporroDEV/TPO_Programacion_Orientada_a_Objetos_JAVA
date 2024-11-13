@@ -1,6 +1,7 @@
 import modelos.Asistente;
 import modelos.Evento;
 import modelos.Recurso;
+import servicios.Calendario;
 import servicios.EventoServicio;
 import servicios.NotificacionServicio;
 
@@ -84,7 +85,7 @@ public class Main {
                 case 1:
                     System.out.print("Ingrese el nombre del evento: ");
                     String nombre = scanner.nextLine();
-                    System.out.print("Ingrese la fecha del evento: (yyyy/mm/dd)");
+                    System.out.print("Ingrese la fecha del evento (yyyy/mm/dd): ");
                     String fecha = scanner.nextLine();
                     System.out.print("Ingrese la ubicación del evento: ");
                     String ubicacion = scanner.nextLine();
@@ -113,7 +114,6 @@ public class Main {
                     break;
 
                 case 5:
-                    System.out.println("===== Calendario =====");
                     eventoServicio.mostrarCalendario();
                     break;
 
