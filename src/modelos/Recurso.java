@@ -36,11 +36,6 @@ public class Recurso {
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
-    //endregion
-
-    public void marcarComoDisponible() {
-        this.disponible = true;
-    }
 
     public void marcarComoNoDisponible() {
         this.disponible = false;
@@ -48,5 +43,9 @@ public class Recurso {
 
     public String obtenerDetalles() {
         return "Tipo: " + tipo + "\nDescripción: " + descripcion + "\nDisponible: " + (disponible ? "Sí" : "No");
+    }
+
+    public String FormatoRecursoCSV() {
+        return String.format("%s;%s;%s", tipo, descripcion, disponible);
     }
 }

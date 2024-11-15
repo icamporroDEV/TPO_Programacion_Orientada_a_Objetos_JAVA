@@ -5,6 +5,7 @@ import servicios.Calendario;
 import servicios.EventoServicio;
 import servicios.NotificacionServicio;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -13,16 +14,15 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         EventoServicio eventoServicio = new EventoServicio();
         NotificacionServicio notificacionServicio = new NotificacionServicio();
-
         boolean salir = false;
+        eventoServicio.cargarDatos();
 
         while (!salir) {
             System.out.println("===== Menú Principal =====");
             System.out.println("1. Gestión de Eventos");
             System.out.println("2. Gestión de Asistentes");
             System.out.println("3. Gestión de Recursos");
-            System.out.println("4. Guardar información en archivo CSV");
-            System.out.println("5. Salir");
+            System.out.println("4. Salir");
             System.out.print("Seleccione una opción: ");
 
             int opcionPrincipal = scanner.nextInt();
@@ -42,15 +42,6 @@ public class Main {
                     break;
 
                 case 4:
-                    try {
-                        eventoServicio.guardarEventos("eventos.csv");
-                        System.out.println("Información guardada exitosamente en eventos.csv");
-                    } catch (IOException e) {
-                        System.out.println("Error al guardar en el archivo CSV: " + e.getMessage());
-                    }
-                    break;
-
-                case 5:
                     salir = true;
                     System.out.println("Saliendo del sistema de gestión de eventos...");
                     System.exit(0);
@@ -118,6 +109,10 @@ public class Main {
                     break;
 
                 case 6:
+                    eventoServicio.guardarEventos();
+                    eventoServicio.guardarAsistentes();
+                    eventoServicio.guardarFeedback();
+                    eventoServicio.guardarRecursos();
                     volver = true;
                     break;
 
@@ -252,7 +247,6 @@ public class Main {
                     eventoServicio.mostrarNombresEventos();
                     System.out.print("Ingrese el nombre del evento: ");
                     nombreEvento = scanner.nextLine();
-
                     eventoServicio.mostrarAsistentesEvento(nombreEvento);
                     break;
 
@@ -289,7 +283,9 @@ public class Main {
                     Evento eventoFV = eventoServicio.buscarEventoPorNombre(nombreEventoFV);
                     System.out.println("Nombre         Feedback");
                     for (int i = 0; i < eventoFV.getAsistentes().size(); i++) {
-                        System.out.println((eventoFV.getAsistentes().get(i).getNombre() + "               " + eventoFV.getFeedback().get(i)));
+                        if (eventoFV.getFeedback().get(i) != -1){
+                            System.out.println((eventoFV.getAsistentes().get(i).getNombre() + "               " + eventoFV.getFeedback().get(i)));
+                        }
                     }
                     int suma = 0; //suma del total de los feedbacks distintos a -1
                     int contador = 0; //cantidad de feedbacks que estan cargados
@@ -299,11 +295,16 @@ public class Main {
                             contador++;
                         }
                     }
-
-                    System.out.println("Promedio Feedback = " + (suma/contador));
+                    try{
+                        System.out.println("Promedio Feedback = " + (suma/contador));
+                    }catch (ArithmeticException e){
+                        System.out.println("No hay ningún feedback cargado para: " + nombreEventoFV);
+                    }
                     break;
 
                 case 8:
+                    eventoServicio.guardarAsistentes();
+                    eventoServicio.guardarFeedback();
                     volver = true;
                     break;
 
@@ -398,6 +399,7 @@ public class Main {
                     break;
 
                 case 4:
+                    eventoServicio.guardarRecursos();
                     volver = true;
                     break;
 

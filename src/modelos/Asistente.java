@@ -34,12 +34,15 @@ public class Asistente {
         return esConfirmado;
     }
     //endregion
-
     public void confirmarAsistencia() {
         this.esConfirmado = true;
     }
 
     public String obtenerInformacion() {
         return "Nombre: " + nombre + "\nEmail: " + email + "\nAsistencia confirmada: " + (esConfirmado ? "Sí" : "No");
+    }
+
+    public String toString(){
+        return nombre + ";" + email + ";" + esConfirmado;
     }
 }

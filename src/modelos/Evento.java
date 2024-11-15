@@ -1,5 +1,7 @@
 package modelos;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,8 +98,8 @@ public class Evento implements Comparable<Evento> {
         this.recursos.remove(recurso);
     }
 
-    public void agregarFeedback(int puntuacion, int asistente){
-        while (puntuacion < 0 || puntuacion > 10){
+    public void agregarFeedback(int puntuacion, int asistente) {
+        while (puntuacion < 0 || puntuacion > 10) {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Error, Ingrese nuevamente la puntuación: ");
             puntuacion = scanner.nextInt();
@@ -115,24 +117,18 @@ public class Evento implements Comparable<Evento> {
         return detalles;
     }
 
-    public String FormatoCSV() {
-        StringBuilder asistentesCSV = new StringBuilder();
-        for (Asistente asistente : asistentes) {
-            if (asistentesCSV.length() > 0) {
-                asistentesCSV.append("|"); // Separador entre asistentes
+    public int buscarAsistente(String nombre){
+        int pos = -1;
+        for(Asistente asistente: asistentes){
+            if(asistente.getNombre().equals(nombre)){
+                pos = asistentes.indexOf(asistente);
             }
-            asistentesCSV.append(asistente.getNombre());
         }
+        return pos;
+    }
 
-        StringBuilder recursosCSV = new StringBuilder();
-        for (Recurso recurso : recursos) {
-            if (recursosCSV.length() > 0) {
-                recursosCSV.append("|"); // Separador entre recursos
-            }
-            recursosCSV.append(recurso.getTipo());
-        }
-
-        return String.format("%s;%s;%s;%s;%s;%s",
-                nombre, fecha, ubicacion, descripcion, asistentesCSV.toString(), recursosCSV.toString());
+    public String FormatoEventoCSV() {
+        return String.format("%s;%s;%s;%s",
+                nombre, fecha, ubicacion, descripcion);
     }
 }
